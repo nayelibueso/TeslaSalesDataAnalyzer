@@ -1,28 +1,21 @@
 package com.coderscampus;
 
+import java.time.YearMonth;
+
 public class SalesRecord {
 	//This class will have fields like 'year'. 'month', and 'sa'es'. You will use instances of this class to store data parsed from the CSV file
-	private Integer year;
-	private Integer month;
+	private YearMonth date;
 	private Integer sales;
 	
-	//Constructor 
-	public SalesRecord(Integer year, Integer month, Integer sales) {
-		this.year = year;
-		this.month = month;
+	public SalesRecord(YearMonth date, Integer sales) {
+		this.date = date;
 		this.sales = sales;
 	}
-	public Integer getYear() {
-		return year;
+	public YearMonth getDate() {
+		return date;
 	}
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-	public Integer getMonth() {
-		return month;
-	}
-	public void setMonth(Integer month) {
-		this.month = month;
+	public void setDate(YearMonth date) {
+		this.date = date;
 	}
 	public Integer getSales() {
 		return sales;
@@ -30,6 +23,12 @@ public class SalesRecord {
 	public void setSales(Integer sales) {
 		this.sales = sales;
 	}
+	@Override
+	public String toString() {
+		return "SalesRecord [date=" + date + ", sales=" + sales + "]";
+	}
+	
+	
 	
 	
 
