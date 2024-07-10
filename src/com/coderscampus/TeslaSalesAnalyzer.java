@@ -19,18 +19,31 @@ public class TeslaSalesAnalyzer {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MMM", Locale.US); //ensures that the month abreviations are intrepreted according to US English.
 
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-			String line;
-			br.readLine(); // Skips header
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(", ");
-				YearMonth date = YearMonth.parse(values[0].trim(), formatter);
-				Integer sales = Integer.parseInt(values[1].trim());
-				salesRecords.add(new SalesRecord(date, sales));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return salesRecords;
+            String line;
+            br.readLine(); // Skip header line
+            while ((line = br.readLine()) != null) {
+                // Split the line into year-month and sales parts
+            	String[] parts = line.split(" ", 2);
+                if (parts.length != 2) {
+                    System.err.println("Skipping line with incorrect format: " + line);
+                    continue;
+                }
+                String dateStr = parts[0];
+                String salesStr = parts[1].trim();
+
+                try {
+                    YearMonth date = YearMonth.parse(dateStr, formatter);
+                    Integer sales = Integer.parseInt(salesStr);
+                    salesRecords.add(new SalesRecord(date, sales));
+                } catch (Exception e) {
+                    System.err.println("Error parsing line: " + line);
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return salesRecords;
 	}
 }
 
