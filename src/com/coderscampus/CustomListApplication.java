@@ -22,6 +22,7 @@ public class CustomListApplication {
 
 		SalesRecord bestMonth = salesRecords.stream().max(Comparator.comparingInt(SalesRecord::getSales)).orElse(null);
 		SalesRecord worstMonth = salesRecords.stream().min(Comparator.comparingInt(SalesRecord::getSales)).orElse(null);
+		
 		System.out.println(modelName + " Yearly Sales Report");
 		yearlySalesMap.forEach((year, sales) -> System.out.println(year + " -> " + sales));
 		if (bestMonth != null) {
