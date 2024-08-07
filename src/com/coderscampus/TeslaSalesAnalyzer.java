@@ -1,39 +1,30 @@
 package com.coderscampus;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TeslaSalesAnalyzer {
-	public static List<SalesRecord> readSalesData(String fileName) {
-		List<SalesRecord> salesRecords = new ArrayList<>();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MMM", Locale.US);
+	public static void generateReports(String modelName, String sourceFileName) {
+		List<SalesRecord> modelSales = FileService.readSalesData(sourceFileName);
+		generateReports(modelSales, modelName);
+	}
 
-		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-			String line;
-			br.readLine(); // Skip header line
-			while ((line = br.readLine()) != null) {
-				String[] parts = line.split(" ", 2);
-				String dateStr = parts[0];
-				String salesStr = parts[1].trim();
+	private static void generateReports(List<SalesRecord> salesRecords, String modelName) {
+		Map<Integer, Integer> yearlySalesMap = salesRecords.stream().collect(Collectors
+				.groupingBy(record -> record.getDate().getYear(), Collectors.summingInt(SalesRecord::getSales)));
 
-				try {
-					YearMonth date = YearMonth.parse(dateStr, formatter);
-					Integer sales = Integer.parseInt(salesStr);
-					salesRecords.add(new SalesRecord(date, sales));
-				} catch (Exception e) {
-					System.err.println("Error parsing line: " + line);
-					e.printStackTrace();
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		SalesRecord bestMonth = salesRecords.stream().max(Comparator.comparingInt(SalesRecord::getSales)).orElse(null);
+		SalesRecord worstMonth = salesRecords.stream().min(Comparator.comparingInt(SalesRecord::getSales)).orElse(null);
+
+		System.out.println(modelName + " Yearly Sales Report");
+		yearlySalesMap.forEach((year, sales) -> System.out.println(year + " -> " + sales));
+		if (bestMonth != null) {
+			System.out.println("The best month for " + modelName + " was: " + bestMonth.getDate());
 		}
-		return salesRecords;
+		if (worstMonth != null) {
+			System.out.println("The worst month for " + modelName + " was: " + worstMonth.getDate());
+		}
 	}
 }
