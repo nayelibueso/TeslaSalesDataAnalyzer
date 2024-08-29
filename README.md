@@ -1,4 +1,4 @@
-# Data Sales Data Analyzer 
+# Tesla Sales Data Analyzer 
 
 This project is designed to analyze and report on sales data for Tesla vehicles between 2016 and 2019. The main functionality includes 
 reading data from three seperate CSV files coresponding to different Tesla models (Model 3, Model S, and Model X) and generating 
